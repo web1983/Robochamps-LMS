@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+}
+ 
+@layer base {
+  html {
+    background-color: #000000;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #000000;
+    color: hsl(var(--foreground));
+    font-family: 'Oxanium', sans-serif;
+  }
+  
+  /* Oxanium font family */
+  * {
+    font-family: 'Oxanium', sans-serif;
+  }
+
+  /* Prevent image flickering and layout shifts */
+  img {
+    display: block;
+  }
+
+  /* Smooth avatar transitions */
+  [data-radix-avatar-image] {
+    transition: opacity 0.15s ease-in-out;
+  }
+
+  /* Custom animations */
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .admin-theme .text-gray-900,
+  .admin-theme .text-gray-800 {
+    color: #ffffff !important;
+  }
+
+  .admin-theme .text-gray-700,
+  .admin-theme .text-gray-600,
+  .admin-theme .text-gray-500,
+  .admin-theme .text-muted-foreground {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  .admin-theme .bg-white,
+  .admin-theme .bg-gray-50 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  .admin-theme .border-gray-200,
+  .admin-theme .border-gray-300 {
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .admin-theme input,
+  .admin-theme textarea,
+  .admin-theme select {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+
+  .admin-theme input::placeholder,
+  .admin-theme textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .admin-theme table {
+    color: #ffffff;
+  }
+
+  .admin-theme thead {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .admin-theme td,
+  .admin-theme th {
+    color: #ffffff !important;
+  }
+
+  .admin-theme tbody tr {
+    color: #ffffff !important;
+  }
+
+  .admin-theme .bg-blue-50,
+  .admin-theme .bg-green-50,
+  .admin-theme .bg-yellow-50,
+  .admin-theme .bg-orange-50 {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+  }
+}
