@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { apiUrl } from "@/lib/apiBase";
 
-const ENROLLMENT_API = "/api/v1/enrollment";
+const ENROLLMENT_API = apiUrl("/api/v1/enrollment");
 
 export const enrollmentApi = createApi({
   reducerPath: "enrollmentApi",

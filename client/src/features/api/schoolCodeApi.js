@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { apiUrl } from "@/lib/apiBase";
 
-const SCHOOL_CODE_API = "/api/v1/school-code";
+const SCHOOL_CODE_API = apiUrl("/api/v1/school-code");
 
 export const schoolCodeApi = createApi({
   reducerPath: "schoolCodeApi",

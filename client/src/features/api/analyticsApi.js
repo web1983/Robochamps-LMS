@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { apiUrl } from "@/lib/apiBase";
 
-const ANALYTICS_API = "/api/v1/analytics";
+const ANALYTICS_API = apiUrl("/api/v1/analytics");
 
 export const analyticsApi = createApi({
   reducerPath: "analyticsApi",
