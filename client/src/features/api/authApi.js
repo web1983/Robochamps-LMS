@@ -85,6 +85,22 @@ export const authApi = createApi({
       },
     }),
 
+    updateCategory: builder.mutation({
+      query: (body) => ({
+        url: "profile/category",
+        method: "PUT",
+        body,
+      }),
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(userLoggedIn({ user: data.user }));
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    }),
+
     createStudentUser: builder.mutation({
       query: (userData) => ({
         url: "create-student",
@@ -176,6 +192,7 @@ export const {
   useLogoutUserMutation, 
   useLoadUserQuery, 
   useUpdateUserMutation,
+  useUpdateCategoryMutation,
   useCreateStudentUserMutation,
   useGetAllStudentsQuery,
   useUpdateStudentByAdminMutation,

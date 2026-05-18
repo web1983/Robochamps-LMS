@@ -1,15 +1,12 @@
 import {
   ChartNoAxesColumn,
   SquareLibrary,
-  ClipboardList,
   UserPlus,
   UserCog,
   Settings,
-  Trophy,
   Users,
   Radio,
   KeyRound,
-  Award,
   Video,
 } from 'lucide-react'
 import React from 'react'
@@ -19,14 +16,11 @@ const navLinks = [
   { to: 'dashboard', label: 'Dashboard', icon: ChartNoAxesColumn },
   { to: 'course', label: 'Courses', icon: SquareLibrary },
   { to: 'live-courses', label: 'Live Courses', icon: Radio },
-  { to: 'test', label: 'Course Test', icon: ClipboardList },
-  { to: 'marks', label: 'Marks', icon: Trophy },
   { to: 'users', label: 'Create User', icon: UserPlus },
   { to: 'manage-users', label: 'Manage Users', icon: UserCog },
   { to: 'student-videos', label: 'Student Videos', icon: Video },
   { to: 'instructors', label: 'Instructors', icon: Users },
   { to: 'school-codes', label: 'School Codes', icon: KeyRound },
-  { to: 'generate-certificate', label: 'Certificates', icon: Award },
   { to: 'settings', label: 'Settings', icon: Settings },
 ]
 
@@ -49,7 +43,7 @@ const Slidebar = () => {
               <ChartNoAxesColumn size={24} />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-white/60">Robowunder</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-white/60">Robochamps</p>
               <p className="text-xl font-semibold">Admin Panel</p>
             </div>
           </div>
@@ -78,7 +72,7 @@ const Slidebar = () => {
           <div className="sticky top-0 z-20 border-b border-white/10 bg-black/70 px-4 py-4 backdrop-blur-2xl lg:hidden">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-white/60">Robowunder</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-white/60">Robochamps</p>
                 <p className="text-lg font-semibold">Admin Panel</p>
               </div>
             </div>

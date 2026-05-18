@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import CategoryGuard from '@/components/CategoryGuard'
 import React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 
@@ -10,7 +11,9 @@ const MainLayout = () => {
     <div className="bg-black w-full min-h-screen">
         <Navbar/>
         <div className={isAdminPage ? 'pt-20' : ''}>
-            <Outlet/>
+            <CategoryGuard>
+              <Outlet/>
+            </CategoryGuard>
         </div>
     </div>
   )

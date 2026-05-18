@@ -264,7 +264,7 @@ const SchoolCodes = () => {
                   name="schoolName"
                   value={formData.schoolName}
                   onChange={handleInputChange}
-                  placeholder="eg. Robowunder Academy"
+                  placeholder="eg. Robochamps Academy"
                   disabled={isCreating}
                 />
               </div>

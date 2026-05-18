@@ -69,7 +69,7 @@ const Navbar = () => {
     img.onload = () => setLogoImageLoaded(true);
     img.onerror = () => {
       setLogoImageLoaded(false);
-      console.error('Failed to load Robowunder logo button');
+      console.error('Failed to load Robochamps logo button');
     };
   }, [logoButtonUrl]);
 
@@ -123,7 +123,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Center - Robowunder Logo Button */}
+        {/* Center - Robochamps Logo Button */}
         <div className="flex items-center justify-center align-items-flex-start">
           <button
             onClick={() => navigate("/")}
@@ -132,7 +132,7 @@ const Navbar = () => {
             {/* Logo Image from Cloudinary - Desktop: original size */}
             <img 
               src="https://res.cloudinary.com/dmlk8egiw/image/upload/v1762944292/Group_3645_vhtdrw.png"
-              alt="Robowunder Logo"
+              alt="Robochamps LMS Logo"
               className="h-12 md:h-14 w-auto object-contain lg:h-16 xl:h-14 max-w-[280px]"
             />
           </button>
@@ -231,7 +231,7 @@ const Navbar = () => {
             {/* Logo Image from Cloudinary */}
             <img 
               src="https://res.cloudinary.com/dmlk8egiw/image/upload/v1762944292/Group_3645_vhtdrw.png"
-              alt="Robowunder Logo"
+              alt="Robochamps LMS Logo"
               className="h-10 sm:h-12 w-auto object-contain max-w-[160px] sm:max-w-[200px]"
             />
           </button>

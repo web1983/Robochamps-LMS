@@ -298,14 +298,36 @@ export const getLiveCoursesByCategory = async (req, res) => {
       });
     }
 
+    if (!user.category) {
+      return res.status(200).json({
+        courses: [],
+        message: "Please select a category to view courses.",
+      });
+    }
+
     const courses = await Course.find({
       isPublished: true,
       isLive: true,
       category: user.category
     }).populate({path:"creator", select:"name photoUrl"});
 
+    const publishedInCategory = await Course.countDocuments({
+      isPublished: true,
+      category: user.category,
+    });
+    const notLiveCount = await Course.countDocuments({
+      isPublished: true,
+      isLive: { $ne: true },
+      category: user.category,
+    });
+
     return res.status(200).json({
-      courses
+      courses,
+      meta: {
+        category: user.category,
+        publishedInCategory,
+        notLiveCount,
+      },
     });
   } catch (error) {
     console.error(error);

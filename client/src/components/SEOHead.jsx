@@ -14,8 +14,8 @@ const SEOHead = () => {
     const siteUrl = `${baseUrl}${currentPath}`;
     
     // Set default values
-    const siteTitle = settings.siteTitle || settings.companyName || 'Robowunder LMS';
-    const siteDescription = settings.siteDescription || 'Learn robotics and STEM skills with Robowunder';
+    const siteTitle = settings.siteTitle || settings.companyName || 'Robochamps LMS';
+    const siteDescription = settings.siteDescription || 'Learn robotics and STEM skills with Robochamps LMS';
     let siteThumbnail = settings.siteThumbnail || settings.logoUrl || '';
     
     // Ensure absolute HTTPS URL for thumbnail (required for WhatsApp, Facebook, etc.)
@@ -81,14 +81,14 @@ const SEOHead = () => {
 
     // Update standard meta tags
     updateMetaTagByName('description', siteDescription);
-    updateMetaTagByName('keywords', 'robotics, STEM, education, LMS, Robowunder');
+    updateMetaTagByName('keywords', 'robotics, STEM, education, LMS, Robochamps');
 
     // Update Open Graph meta tags (for Facebook, WhatsApp, LinkedIn, etc.)
     updateMetaTag('og:type', 'website');
     updateMetaTag('og:title', siteTitle);
     updateMetaTag('og:description', siteDescription);
     updateMetaTag('og:url', siteUrl);
-    updateMetaTag('og:site_name', settings.companyName || 'Robowunder LMS');
+    updateMetaTag('og:site_name', settings.companyName || 'Robochamps LMS');
     updateMetaTag('og:locale', 'en_US');
     
     // Update Open Graph image tags (critical for WhatsApp/Facebook)

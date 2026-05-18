@@ -25,11 +25,11 @@ export const sendPasswordResetEmail = async (email, otp, userName) => {
 
     const mailOptions = {
       from: {
-        name: 'Robowunder LMS',
+        name: 'Robochamps LMS',
         address: process.env.EMAIL_USER,
       },
       to: email,
-      subject: 'Password Reset OTP - Robowunder LMS',
+      subject: 'Password Reset OTP - Robochamps LMS',
       html: `
         <!DOCTYPE html>
         <html>
@@ -97,7 +97,7 @@ export const sendPasswordResetEmail = async (email, otp, userName) => {
             
             <p>Hi <strong>${userName}</strong>,</p>
             
-            <p>We received a request to reset your password for your Robowunder LMS account.</p>
+            <p>We received a request to reset your password for your Robochamps LMS account.</p>
             
             <p>Use the following OTP (One-Time Password) to reset your password:</p>
             
@@ -119,7 +119,7 @@ export const sendPasswordResetEmail = async (email, otp, userName) => {
             <p>If you did not request a password reset, please ignore this email or contact support if you have concerns.</p>
             
             <div class="footer">
-              <p><strong>Robowunder International Robotics Championship 2026</strong></p>
+              <p><strong>Robochamps LMS</strong></p>
               <p>This is an automated email. Please do not reply to this email.</p>
             </div>
           </div>
@@ -144,11 +144,11 @@ export const sendWelcomeEmail = async (email, userName) => {
 
     const mailOptions = {
       from: {
-        name: 'Robowunder LMS',
+        name: 'Robochamps LMS',
         address: process.env.EMAIL_USER,
       },
       to: email,
-      subject: 'Welcome to Robowunder LMS! 🎉',
+      subject: 'Welcome to Robochamps LMS! 🎉',
       html: `
         <!DOCTYPE html>
         <html>
@@ -199,29 +199,29 @@ export const sendWelcomeEmail = async (email, userName) => {
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0;">🎉 Welcome to Robowunder LMS!</h1>
+              <h1 style="margin: 0;">🎉 Welcome to Robochamps LMS!</h1>
             </div>
             
             <p>Hi <strong>${userName}</strong>,</p>
             
-            <p>Welcome to <strong>Robowunder International Robotics Championship 2026</strong> Learning Management System!</p>
+            <p>Welcome to <strong>Robochamps LMS</strong> Learning Management System!</p>
             
             <p>Your account has been successfully created. You can now:</p>
             <ul>
               <li>📚 Browse and enroll in robotics courses</li>
               <li>🎥 Watch video tutorials</li>
-              <li>📝 Take tests and assessments</li>
-              <li>🏆 Earn certificates upon completion</li>
+              <li>📝 Learn at your own pace</li>
+              <li>🏆 Track your progress</li>
             </ul>
             
             <div style="text-align: center;">
-              <a href="https://lms.robowunder.in" class="button">Start Learning Now →</a>
+              <a href="/" class="button">Start Learning Now →</a>
             </div>
             
             <p>If you have any questions, feel free to reach out to our support team.</p>
             
             <div class="footer">
-              <p><strong>Robowunder International Robotics Championship 2026</strong></p>
+              <p><strong>Robochamps LMS</strong></p>
               <p>This is an automated email. Please do not reply to this email.</p>
             </div>
           </div>

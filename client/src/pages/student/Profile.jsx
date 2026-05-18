@@ -13,11 +13,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Award, User, Mail, Shield, GraduationCap, Edit2, Camera, Video } from 'lucide-react';
+import { Loader2, User, Mail, Shield, GraduationCap, Edit2, Camera } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLoadUserQuery, useUpdateUserMutation } from '@/features/api/authApi.js';
-import { useGetCertificateStatusQuery } from '@/features/api/enrollmentApi';
-import RobowunderCertificate from '@/components/RobowunderCertificate';
+import { getCategoryLabel } from '@/lib/categoryUtils';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
 
@@ -29,10 +28,6 @@ const Profile = () => {
   const [updateUser, { data: updateUserData, isLoading: updateUserIsLoading, isError, error, isSuccess }] = useUpdateUserMutation();
   
   const user = data?.user;
-  const { data: certificateData } = useGetCertificateStatusQuery(undefined, {
-    skip: !user || user?.role !== 'student'
-  });
-
   // Set initial name
   useEffect(() => {
     if (data?.user?.name) setName(data.user.name);
@@ -68,19 +63,6 @@ useEffect(() => {
   }
 }, [isSuccess, isError, updateUserData, error, refetch]);
 
-
-  // Helper function to get category label
-  const getCategoryLabel = (category) => {
-    const categoryMap = {
-      'grade_3_5_basic': 'Grade 3 to 5 (Basic)',
-      'grade_6_8_basic': 'Grade 6 to 8 (Basic)',
-      'grade_9_12_basic': 'Grade 9 to 12 (Basic)',
-      'grade_3_5_advance': 'Grade 3 to 5 (Advance)',
-      'grade_6_8_advance': 'Grade 6 to 8 (Advance)',
-      'grade_9_12_advance': 'Grade 9 to 12 (Advance)'
-    };
-    return categoryMap[category] || category;
-  };
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -154,14 +136,16 @@ useEffect(() => {
                   </div>
 
                   {/* Category (Student only) */}
-                  {user?.role === 'student' && user?.category && (
-                    <div className="p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-                      <div className="flex items-center gap-3 mb-2">
+                  {user?.role === 'student' && (
+                    <motion.div className="p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+                      <motion.div className="flex items-center gap-3 mb-2">
                         <GraduationCap className="h-5 w-5 text-[#F58120]" />
-                        <Label className="text-white/70 font-semibold text-sm">Category</Label>
-                      </div>
-                      <p className="text-white text-lg font-semibold ml-8">{getCategoryLabel(user.category)}</p>
-                    </div>
+                        <Label className="text-white/70 font-semibold text-sm">Learning category</Label>
+                      </motion.div>
+                      <p className="text-white text-lg font-semibold ml-8">
+                        {user?.category ? getCategoryLabel(user.category) : 'Not selected'}
+                      </p>
+                    </motion.div>
                   )}
 
                   {/* Edit Profile Button */}
@@ -219,12 +203,14 @@ useEffect(() => {
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
-                    <Link to="/upload-video">
-                      <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold py-6 px-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                        <Video className="h-4 w-4 mr-2" />
-                        Upload Project Videos
-                      </Button>
-                    </Link>
+                    {user?.role === 'student' && (
+                      <Link to="/select-category">
+                        <Button className="w-full md:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold py-6 px-8">
+                          <GraduationCap className="h-4 w-4 mr-2" />
+                          Change category
+                        </Button>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
@@ -232,32 +218,6 @@ useEffect(() => {
           </CardContent>
         </Card>
 
-        {/* Certificate Section */}
-        {certificateData?.eligible && certificateData?.certificateData && (
-          <Card className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border-2 border-yellow-500/50 shadow-2xl overflow-hidden">
-            <CardHeader className="bg-yellow-500/20 backdrop-blur-sm border-b border-yellow-500/50">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-[#F58120] rounded-xl shadow-lg">
-                  <Award className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-bold text-white">
-                    🎉 Your Certificate
-                  </h2>
-                  <p className="text-white/80 mt-1">You've earned your championship certificate!</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="p-6 bg-white/5 backdrop-blur-sm">
-              <div className="max-w-3xl mx-auto">
-                <RobowunderCertificate 
-                  userName={certificateData.certificateData.userName}
-                  completionDate={certificateData.certificateData.completionDate}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );

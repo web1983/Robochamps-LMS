@@ -11,21 +11,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2 } from "lucide-react"; // import Loader2
+import { Loader2 } from "lucide-react";
 import { useLoginUserMutation, useRegisterUserMutation } from "@/features/api/authApi";
 import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
 
+const getPostLoginPath = (user) => {
+  if (user?.role === "instructor") return "/admin/dashboard";
+  if (!user?.category) return "/select-category";
+  return "/";
+};
 
 const Login = () => {
-  const [signupInput, setSignupInput] = useState({ 
-    name: "", 
-    email: "", 
-    password: "", 
+  const [signupInput, setSignupInput] = useState({
+    name: "",
+    email: "",
+    password: "",
     schoolCode: "",
-    studentClass: "",
-    level: ""
   });
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
 
@@ -33,11 +35,10 @@ const Login = () => {
     useRegisterUserMutation();
   const [loginUser, { data: loginData, error: loginError, isLoading: loginIsLoading, isSuccess: loginIsSuccess }] =
     useLoginUserMutation();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const changeInputHandler = (e, type) => {
     const { name, value } = e.target;
-
     if (type === "signup") {
       setSignupInput({ ...signupInput, [name]: value });
     } else {
@@ -45,66 +46,40 @@ const Login = () => {
     }
   };
 
-  const handleRegistration = async (type) => {   // async added
-    let inputData = type === "signup" ? signupInput : loginInput;
-    
-    // If signup, validate and construct category from studentClass and level
+  const handleRegistration = async (type) => {
     if (type === "signup") {
-      if (!signupInput.studentClass || !signupInput.level) {
-        toast.error("Please select your grade and level");
-        return;
-      }
-
-      if (!signupInput.schoolCode || signupInput.schoolCode.trim() === "") {
+      if (!signupInput.schoolCode?.trim()) {
         toast.error("Please enter your school code");
         return;
       }
-      
-      const categoryMap = {
-        "3-5_basic": "grade_3_5_basic",
-        "3-5_advance": "grade_3_5_advance",
-        "6-8_basic": "grade_6_8_basic",
-        "6-8_advance": "grade_6_8_advance",
-        "9-12_basic": "grade_9_12_basic",
-        "9-12_advance": "grade_9_12_advance"
-      };
-      
-      const categoryKey = `${signupInput.studentClass}_${signupInput.level.toLowerCase()}`;
-      const category = categoryMap[categoryKey];
-      
-      inputData = {
+      await registerUser({
         name: signupInput.name,
         email: signupInput.email,
         password: signupInput.password,
         schoolCode: signupInput.schoolCode.trim().toUpperCase(),
-        category: category
-      };
+      });
+      return;
     }
-    
-    console.log(inputData);
-    const action = type === "signup" ? registerUser : loginUser;
-    await action(inputData);  // works fine now
+    await loginUser(loginInput);
   };
 
+  useEffect(() => {
+    if (registerIsSuccess && registerData) {
+      toast.success(registerData.message || "Signup successful. Logging you in...");
+      loginUser({ email: signupInput.email, password: signupInput.password });
+    }
+    if (registerError) {
+      toast.error(registerError?.data?.message || "Signup failed");
+    }
 
-useEffect(() => {
-  if (registerIsSuccess && registerData) {
-    toast.success(registerData.message || "Signup Successful. Logging you in...");
-    // Automatically log in the user after successful signup
-    loginUser({ email: signupInput.email, password: signupInput.password });
-  }
-  if (registerError) {
-    toast.error(registerError?.data?.message || "Signup Failed");
-  }
-
-  if (loginIsSuccess && loginData) {
-    toast.success(loginData.message || "Login Successful.");
-    navigate("/");
-  }
-  if (loginError) {
-    toast.error(loginError?.data?.message || "Login Failed");
-  }
-}, [registerIsSuccess, registerError, registerData, loginIsSuccess, loginError, loginData]);
+    if (loginIsSuccess && loginData) {
+      toast.success(loginData.message || "Login successful.");
+      navigate(getPostLoginPath(loginData.user));
+    }
+    if (loginError) {
+      toast.error(loginError?.data?.message || "Login failed");
+    }
+  }, [registerIsSuccess, registerError, registerData, loginIsSuccess, loginError, loginData, navigate, loginUser, signupInput.email, signupInput.password]);
 
   return (
     <div className="relative flex items-start justify-center min-h-screen bg-black bg-[url('https://res.cloudinary.com/dmlk8egiw/image/upload/v1762946281/Group_3646_ptqpn7.png')] bg-cover bg-center md:bg-top bg-no-repeat px-4 pt-24 pb-12">
@@ -125,12 +100,13 @@ useEffect(() => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Signup Tab */}
           <TabsContent value="signup" className="p-6 overflow-y-auto flex-1 min-h-0">
             <Card className="shadow-none border-0 bg-transparent">
               <CardHeader className="mb-4 text-center">
                 <CardTitle className="text-2xl font-semibold text-white">Signup</CardTitle>
-                <CardDescription className="text-white/70">Create a new account and click signup when you're done.</CardDescription>
+                <CardDescription className="text-white/70">
+                  Create an account with your school code. You will choose your grade after login.
+                </CardDescription>
               </CardHeader>
 
               <CardContent className="grid gap-4">
@@ -141,20 +117,7 @@ useEffect(() => {
                     value={signupInput.name}
                     name="name"
                     type="text"
-                    placeholder="eg. Akshay"
-                    required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="signup-email" className="text-white font-semibold">Email</Label>
-                  <Input
-                    onChange={(e) => changeInputHandler(e, "signup")}
-                    value={signupInput.email}
-                    name="email"
-                    type="email"
-                    placeholder="eg. akshay@lms.com"
+                    placeholder="Your name"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />
@@ -169,42 +132,22 @@ useEffect(() => {
                     name="schoolCode"
                     type="text"
                     placeholder="eg. RW1234"
+                    required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="signup-class" className="text-white font-semibold">Student Class</Label>
-                  <Select 
-                    value={signupInput.studentClass} 
-                    onValueChange={(value) => setSignupInput({ ...signupInput, studentClass: value })}
-                  >
-                    <SelectTrigger className="!bg-white/10 !border-white/20 !text-white focus:!border-[#F58120] focus:!ring-[#F58120] data-[placeholder]:!text-white/50 [&>span]:!text-white [&>svg]:!text-white">
-                      <SelectValue placeholder="Select your grade" />
-                    </SelectTrigger>
-                    <SelectContent className="!bg-gray-800 !border-white/20 !text-white">
-                      <SelectItem value="3-5" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">Grade 3 to 5</SelectItem>
-                      <SelectItem value="6-8" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">Grade 6 to 8</SelectItem>
-                      <SelectItem value="9-12" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">Grade 9 to 12</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="signup-level" className="text-white font-semibold">Level</Label>
-                  <Select 
-                    value={signupInput.level} 
-                    onValueChange={(value) => setSignupInput({ ...signupInput, level: value })}
-                  >
-                    <SelectTrigger className="!bg-white/10 !border-white/20 !text-white focus:!border-[#F58120] focus:!ring-[#F58120] data-[placeholder]:!text-white/50 [&>span]:!text-white [&>svg]:!text-white">
-                      <SelectValue placeholder="Select level" />
-                    </SelectTrigger>
-                    <SelectContent className="!bg-gray-800 !border-white/20 !text-white">
-                      <SelectItem value="Basic" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">Basic</SelectItem>
-                      {/* TODO: Uncomment below line to show Advance option in the future */}
-                      {/* <SelectItem value="Advance" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">Advance</SelectItem> */}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="signup-email" className="text-white font-semibold">Email</Label>
+                  <Input
+                    onChange={(e) => changeInputHandler(e, "signup")}
+                    value={signupInput.email}
+                    name="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
+                  />
                 </div>
 
                 <div className="grid gap-2">
@@ -214,7 +157,7 @@ useEffect(() => {
                     value={signupInput.password}
                     name="password"
                     type="password"
-                    placeholder="eg. xyz"
+                    placeholder="Password"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />
@@ -239,7 +182,6 @@ useEffect(() => {
             </Card>
           </TabsContent>
 
-          {/* Login Tab */}
           <TabsContent value="login" className="p-6">
             <Card className="shadow-none border-0 bg-transparent">
               <CardHeader className="mb-4 text-center">
@@ -255,7 +197,7 @@ useEffect(() => {
                     value={loginInput.email}
                     name="email"
                     type="email"
-                    placeholder="eg. akshay@lms.com"
+                    placeholder="you@example.com"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />
@@ -264,8 +206,8 @@ useEffect(() => {
                 <div className="grid gap-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="login-password" className="text-white font-semibold">Password</Label>
-                    <Link 
-                      to="/forgot-password" 
+                    <Link
+                      to="/forgot-password"
                       className="text-sm text-[#F58120] hover:text-orange-400 hover:underline font-medium transition-colors"
                     >
                       Forgot Password?
@@ -276,7 +218,7 @@ useEffect(() => {
                     value={loginInput.password}
                     name="password"
                     type="password"
-                    placeholder="eg. xyz"
+                    placeholder="Password"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />

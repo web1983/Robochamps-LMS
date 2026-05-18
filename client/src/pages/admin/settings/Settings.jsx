@@ -253,7 +253,7 @@ const Settings = () => {
                 type="text"
                 value={siteTitle}
                 onChange={(e) => setSiteTitle(e.target.value)}
-                placeholder="Enter site title (e.g., Robowunder LMS)"
+                placeholder="Enter site title (e.g., Robochamps LMS)"
                 className="max-w-md"
                 maxLength={60}
               />
@@ -273,7 +273,7 @@ const Settings = () => {
                 id="siteDescription"
                 value={siteDescription}
                 onChange={(e) => setSiteDescription(e.target.value)}
-                placeholder="Enter site description (e.g., Learn robotics and STEM skills with Robowunder)"
+                placeholder="Enter site description (e.g., Learn robotics and STEM skills with Robochamps LMS)"
                 className="max-w-md"
                 rows={4}
                 maxLength={160}

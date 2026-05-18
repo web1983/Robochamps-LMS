@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getUserProfile, logout, updateProfile, updateDriveLink, createStudentUser, getAllUsers, updateUserByAdmin, deleteUser, getAllInstructors, createInstructor, updateInstructorPassword, deleteInstructor, forgotPassword, resetPassword, getStudentsWithVideos } from "../controllers/user.controller.js";
+import { register, login, getUserProfile, logout, updateProfile, updateCategory, updateDriveLink, createStudentUser, getAllUsers, updateUserByAdmin, deleteUser, getAllInstructors, createInstructor, updateInstructorPassword, deleteInstructor, forgotPassword, resetPassword, getStudentsWithVideos } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import upload from "../utils/multer.js";
 
@@ -10,6 +10,7 @@ router.post("/login", login);
 router.get("/logout", isAuthenticated, logout);
 router.get("/profile", isAuthenticated, getUserProfile);
 router.route("/profile/update").put(isAuthenticated,upload.single("profilePhoto"), updateProfile);
+router.put("/profile/category", isAuthenticated, updateCategory);
 router.route("/profile/drive-link").put(isAuthenticated, updateDriveLink);
 
 // Password Reset Routes

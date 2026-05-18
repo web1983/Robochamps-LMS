@@ -25,7 +25,7 @@ export const register = async (req, res) => {
       });
     }
 
-    if (!schoolCode) {
+    if (!schoolCode || !schoolCode.trim()) {
       return res.status(400).json({
         success: false,
         message: "School code is required.",
@@ -33,10 +33,8 @@ export const register = async (req, res) => {
     }
 
     const normalizedCode = schoolCode.trim().toUpperCase();
-
-    let reservedSchoolCode = null;
-
     const hashedPassword = await bcrypt.hash(password, 10);
+    let reservedSchoolCode = null;
 
     try {
       reservedSchoolCode = await SchoolCode.findOneAndUpdate(
@@ -57,14 +55,19 @@ export const register = async (req, res) => {
         });
       }
 
-      const newUser = await User.create({
+      const userPayload = {
         name,
         email,
         password: hashedPassword,
-        category: category || "grade_3_5_basic",
         school: reservedSchoolCode.schoolName,
         schoolCode: reservedSchoolCode.code,
-      });
+      };
+
+      if (category) {
+        userPayload.category = category;
+      }
+
+      const newUser = await User.create(userPayload);
 
       return res.status(201).json({
         success: true,
@@ -184,6 +187,60 @@ export const getUserProfile = async (req,res) => {
     }
 }
 
+
+const VALID_CATEGORIES = [
+  "grade_3_5_basic",
+  "grade_6_8_basic",
+  "grade_9_12_basic",
+  "grade_3_5_advance",
+  "grade_6_8_advance",
+  "grade_9_12_advance",
+];
+
+export const updateCategory = async (req, res) => {
+  try {
+    const { category } = req.body;
+
+    if (!category || !VALID_CATEGORIES.includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please select a valid category.",
+      });
+    }
+
+    const user = await User.findById(req.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    if (user.role !== "student") {
+      return res.status(403).json({
+        success: false,
+        message: "Only students can update learning category.",
+      });
+    }
+
+    user.category = category;
+    await user.save();
+
+    const updatedUser = await User.findById(req.id).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "Category updated successfully.",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update category.",
+    });
+  }
+};
 
 export const updateProfile = async (req, res) => {
   try {

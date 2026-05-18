@@ -10,7 +10,7 @@ const LoadingSpinner = () => {
                     <div className="flex items-center justify-center">
                         <img 
                             src="https://res.cloudinary.com/dmlk8egiw/image/upload/v1762944292/Group_3645_vhtdrw.png"
-                            alt="Robowunder Logo"
+                            alt="Robochamps LMS Logo"
                             className="h-12 md:h-14 w-auto object-contain lg:h-16 xl:h-14 max-w-[280px]"
                         />
                     </div>

@@ -12,21 +12,18 @@ import Profile from './pages/student/Profile'
 import UploadVideo from './pages/student/UploadVideo'
 import CourseDetail from './pages/student/CourseDetail'
 import VideoPlayer from './pages/student/VideoPlayer'
-import MCQTest from './pages/student/MCQTest'
+import SelectCategory from './pages/student/SelectCategory'
 import Slidebar from './pages/admin/Slidebar'
 import Dashboard from './pages/admin/Dashboard'
 import CourseTable from './pages/admin/course/CourseTable'
 import AddCourse from './pages/admin/course/AddCourse'
 import EditCourse from './pages/admin/course/EditCourse'
-import CourseTest from './pages/admin/test/CourseTest'
-import MarksManagement from './pages/admin/marks/MarksManagement'
 import CreateUser from './pages/admin/user/CreateUser'
 import UserManagement from './pages/admin/user/UserManagement'
 import InstructorTab from './pages/admin/InstructorTab'
 import LiveCourses from './pages/admin/course/LiveCourses'
 import SchoolCodes from './pages/admin/SchoolCodes'
 import Settings from './pages/admin/settings/Settings'
-import GenerateCertificate from './pages/admin/certificate/GenerateCertificate'
 import StudentVideos from './pages/admin/StudentVideos'
 import ProtectedRoute from './components/ProtectedRoute'
 import NotFound from './pages/NotFound'
@@ -84,10 +81,9 @@ const appRouter = createBrowserRouter([
         )
       },
       {
-        path:"course/:courseId/test",
-        element:<MCQTest/>
+        path:"select-category",
+        element:<SelectCategory/>
       },
-
 
       // admin routes start from here
       {
@@ -119,14 +115,6 @@ const appRouter = createBrowserRouter([
             element:<EditCourse/>
           },
           {
-            path:"test",
-            element:<CourseTest/>
-          },
-          {
-            path:"marks",
-            element:<MarksManagement/>
-          },
-          {
             path:"users",
             element:<CreateUser/>
           },
@@ -141,10 +129,6 @@ const appRouter = createBrowserRouter([
           {
             path:"school-codes",
             element:<SchoolCodes/>
-          },
-          {
-            path:"generate-certificate",
-            element:<GenerateCertificate/>
           },
           {
             path:"settings",

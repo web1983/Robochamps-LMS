@@ -497,8 +497,9 @@ const VideoPlayer = () => {
     setShowStartDialog(false);
   };
 
-  const handleProceedToTest = () => {
-    navigate(`/course/${courseId}/test`);
+  const handleFinish = () => {
+    setShowCompleteDialog(false);
+    navigate(`/course/${courseId}`);
   };
 
   if (isLoading) {
@@ -537,34 +538,13 @@ const VideoPlayer = () => {
               📹 Course Video
             </DialogTitle>
             <DialogDescription className="sr-only">
-              Watch the complete video to unlock the test
+              Start watching the course video
             </DialogDescription>
           </DialogHeader>
           <div className="text-center space-y-4 pt-4">
             <div className="p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg">
               <p className="text-white font-semibold">
-                Watch the complete video to unlock the test!
-              </p>
-            </div>
-            
-            <div className="space-y-2 text-left text-sm text-white/80">
-              <p className="flex items-start gap-2">
-                <CheckCircle className="h-5 w-5 text-[#F58120] flex-shrink-0 mt-0.5" />
-                <span>You must watch the full video</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <CheckCircle className="h-5 w-5 text-[#F58120] flex-shrink-0 mt-0.5" />
-                <span>After completion, the test will be available</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <CheckCircle className="h-5 w-5 text-[#F58120] flex-shrink-0 mt-0.5" />
-                <span>Complete the test to earn your certificate</span>
-              </p>
-            </div>
-
-            <div className="p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg">
-              <p className="text-white/90 text-sm">
-                <strong className="text-white">Note:</strong> Please pay attention to the video content as it will help you in the test!
+                Press play and watch the full lesson video.
               </p>
             </div>
           </div>
@@ -587,7 +567,7 @@ const VideoPlayer = () => {
               🎉 Video Complete!
             </DialogTitle>
             <DialogDescription className="sr-only">
-              Video completed successfully. Now take the test.
+              Video completed successfully
             </DialogDescription>
           </DialogHeader>
           <div className="text-center space-y-4 pt-4">
@@ -597,31 +577,14 @@ const VideoPlayer = () => {
               </p>
             </div>
             
-            <div className="space-y-2 text-white/80">
-              <p className="text-white font-medium">Now it's time to test your knowledge!</p>
-              <div className="p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-left text-sm">
-                <p className="font-semibold text-white mb-2">Test Information:</p>
-                <ul className="space-y-1 text-white/80">
-                  <li>• {course.testQuestions?.length || 0} Questions</li>
-                  <li>• {course.testTimeLimit || 20} Minutes Time Limit</li>
-                  <li>• Passing Score: 60%</li>
-                  <li>• You can retake until you pass</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg">
-              <p className="text-white/90 text-sm">
-                <strong className="text-white">Important:</strong> Once you start the test, don't switch tabs or go back. The test will restart if you do!
-              </p>
-            </div>
+            <p className="text-white/80">You can rewatch this video anytime from My Learning.</p>
           </div>
           <div className="flex justify-center pt-4">
             <Button
-              onClick={handleProceedToTest}
+              onClick={handleFinish}
               className="bg-[#F58120] hover:bg-[#F58120]/90 text-white px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              Start Test Now
+              Back to Course
             </Button>
           </div>
         </DialogContent>

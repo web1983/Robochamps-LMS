@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: ["grade_3_5_basic", "grade_6_8_basic", "grade_9_12_basic", "grade_3_5_advance", "grade_6_8_advance", "grade_9_12_advance"],
-      default: "grade_3_5_basic",
     },
     school: {
       type: String,
