@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
-import connectDB from "./database/db.js";
+import connectDB, { getDbConnectionHint } from "./database/db.js";
 import userRoute from "./routes/user.routes.js"
 import cors from "cors";
 import courseRoute from "./routes/course.route.js"
@@ -92,7 +92,9 @@ app.get("/home", (req, res) => {
 
 // Diagnostic — no DB required (use after deploy to verify env vars)
 app.get("/api/health", (req, res) => {
-    const mongoUriConfigured = Boolean(process.env.MONGO_URI || process.env.MONGODB_URI);
+    const mongoUriConfigured = Boolean(
+        (process.env.MONGO_URI || process.env.MONGODB_URI || "").trim()
+    );
     const jwtConfigured = Boolean(process.env.JWT_SECRET);
     res.status(200).json({
         success: true,
@@ -107,20 +109,34 @@ app.get("/api/health", (req, res) => {
     });
 });
 
+// Tries a real DB connection (open in browser after deploy)
+app.get("/api/health/db", async (req, res) => {
+    try {
+        await connectDB();
+        res.status(200).json({ success: true, message: "MongoDB connected" });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Database connection failed",
+            error: error.message,
+            errorType: error.name,
+            hint: getDbConnectionHint(error),
+        });
+    }
+});
+
 // Connect to database before handling requests
 app.use(async (req, res, next) => {
     try {
         await connectDB();
         next();
     } catch (error) {
-        const hint = !process.env.MONGO_URI
-            ? " Set MONGO_URI in Vercel environment variables."
-            : " Check MongoDB Atlas → Network Access allows 0.0.0.0/0 (Vercel uses dynamic IPs).";
         res.status(500).json({
             success: false,
             message: "Database connection failed",
             error: error.message,
-            hint: process.env.NODE_ENV === "production" ? hint : undefined,
+            errorType: error.name,
+            hint: getDbConnectionHint(error),
         });
     }
 });
