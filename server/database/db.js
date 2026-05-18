@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGO_URI;
+const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 /** @type {{ conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null }} */
 let cached = global.mongoose;

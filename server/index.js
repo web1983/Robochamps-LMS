@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 import connectDB from "./database/db.js";
 import userRoute from "./routes/user.routes.js"
@@ -10,7 +12,8 @@ import analyticsRoute from "./routes/analytics.route.js"
 import settingsRoute from "./routes/settings.route.js"
 import schoolCodeRoute from "./routes/schoolCode.route.js"
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -19,12 +22,12 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cookieParser());
 
-// Vercel serverless: requests to /api/* may arrive without the /api prefix
+// Vercel serverless: /api/* requests may arrive without the /api prefix
 app.use((req, _res, next) => {
     const path = req.url.split("?")[0];
-    if (path.startsWith("/v1/")) {
-        const qs = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
-        req.url = `/api${path}${qs}`;
+    const qs = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+    if (!path.startsWith("/api")) {
+        req.url = `/api${path.startsWith("/") ? path : `/${path}`}${qs}`;
     }
     next();
 });
@@ -84,6 +87,16 @@ app.get("/home", (req, res) => {
     res.status(200).json({
         success: true,
         message: "Hello from backend"
+    });
+});
+
+// Diagnostic — no DB required (use after deploy to verify env vars)
+app.get("/api/health", (req, res) => {
+    res.status(200).json({
+        success: true,
+        mongoUriConfigured: Boolean(process.env.MONGO_URI),
+        jwtConfigured: Boolean(process.env.JWT_SECRET),
+        vercel: Boolean(process.env.VERCEL),
     });
 });
 
