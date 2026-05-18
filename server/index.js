@@ -92,11 +92,18 @@ app.get("/home", (req, res) => {
 
 // Diagnostic — no DB required (use after deploy to verify env vars)
 app.get("/api/health", (req, res) => {
+    const mongoUriConfigured = Boolean(process.env.MONGO_URI || process.env.MONGODB_URI);
+    const jwtConfigured = Boolean(process.env.JWT_SECRET);
     res.status(200).json({
         success: true,
-        mongoUriConfigured: Boolean(process.env.MONGO_URI),
-        jwtConfigured: Boolean(process.env.JWT_SECRET),
+        mongoUriConfigured,
+        jwtConfigured,
         vercel: Boolean(process.env.VERCEL),
+        ...(!mongoUriConfigured || !jwtConfigured
+            ? {
+                  fix: "Vercel → Project Settings → Environment Variables → add MONGO_URI and JWT_SECRET for Production → Redeploy (disable build cache).",
+              }
+            : {}),
     });
 });
 

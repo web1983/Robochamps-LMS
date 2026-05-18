@@ -77,7 +77,9 @@ const Login = () => {
       navigate(getPostLoginPath(loginData.user));
     }
     if (loginError) {
-      toast.error(loginError?.data?.message || "Login failed");
+      const msg = loginError?.data?.message || "Login failed";
+      const hint = loginError?.data?.hint;
+      toast.error(hint ? `${msg}. ${hint}` : msg);
     }
   }, [registerIsSuccess, registerError, registerData, loginIsSuccess, loginError, loginData, navigate, loginUser, signupInput.email, signupInput.password]);
 
