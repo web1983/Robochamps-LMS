@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
+import mongoose from "mongoose";
 import connectDB, { getDbConnectionHint } from "./database/db.js";
 import userRoute from "./routes/user.routes.js"
 import cors from "cors";
@@ -128,7 +129,9 @@ app.get("/api/health/db", async (req, res) => {
 // Connect to database before handling requests
 app.use(async (req, res, next) => {
     try {
-        await connectDB();
+        if (mongoose.connection.readyState !== 1) {
+            await connectDB();
+        }
         next();
     } catch (error) {
         res.status(500).json({

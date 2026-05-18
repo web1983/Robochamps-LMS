@@ -55,9 +55,10 @@ const connectDB = async () => {
       .connect(MONGODB_URI, {
         bufferCommands: false,
         maxPoolSize: isServerless ? 1 : 10,
-        serverSelectionTimeoutMS: 30000,
+        serverSelectionTimeoutMS: isServerless ? 10000 : 30000,
         socketTimeoutMS: 45000,
         family: 4,
+        connectTimeoutMS: 10000,
       })
       .then((mongooseInstance) => {
         console.log("MongoDB Connected");
