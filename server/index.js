@@ -93,10 +93,14 @@ app.use(async (req, res, next) => {
         await connectDB();
         next();
     } catch (error) {
+        const hint = !process.env.MONGO_URI
+            ? " Set MONGO_URI in Vercel environment variables."
+            : " Check MongoDB Atlas → Network Access allows 0.0.0.0/0 (Vercel uses dynamic IPs).";
         res.status(500).json({
             success: false,
             message: "Database connection failed",
-            error: error.message
+            error: error.message,
+            hint: process.env.NODE_ENV === "production" ? hint : undefined,
         });
     }
 });
