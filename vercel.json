@@ -20,6 +20,10 @@
       "dest": "server/api/index.js"
     },
     {
+      "src": "/favicon.ico",
+      "dest": "client/dist/favicon.svg"
+    },
+    {
       "src": "/(.*\\.(js|css|ico|png|svg|jpg|jpeg|gif|webp|woff2?|txt|html|json))",
       "dest": "client/dist/$1"
     },
