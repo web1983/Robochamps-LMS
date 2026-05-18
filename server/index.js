@@ -19,6 +19,16 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cookieParser());
 
+// Vercel serverless: requests to /api/* may arrive without the /api prefix
+app.use((req, _res, next) => {
+    const path = req.url.split("?")[0];
+    if (path.startsWith("/v1/")) {
+        const qs = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+        req.url = `/api${path}${qs}`;
+    }
+    next();
+});
+
 // CORS configuration for both development and production
 const allowedOrigins = [
     "http://localhost:5173",
@@ -27,6 +37,8 @@ const allowedOrigins = [
     "https://lms.robowunder.in",
     "https://lms.robowunder.com",
     "https://lms-amber-nine.vercel.app",
+    "https://robochamps-lms.vercel.app",
+    "https://www.robochamps-lms.vercel.app",
     process.env.FRONTEND_URL
 ].filter(Boolean); // Remove undefined values
 
