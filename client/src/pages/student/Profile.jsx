@@ -137,15 +137,15 @@ useEffect(() => {
 
                   {/* Category (Student only) */}
                   {user?.role === 'student' && (
-                    <motion.div className="p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-                      <motion.div className="flex items-center gap-3 mb-2">
+                    <div className="p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+                      <div className="flex items-center gap-3 mb-2">
                         <GraduationCap className="h-5 w-5 text-[#F58120]" />
                         <Label className="text-white/70 font-semibold text-sm">Learning category</Label>
-                      </motion.div>
+                      </div>
                       <p className="text-white text-lg font-semibold ml-8">
                         {user?.category ? getCategoryLabel(user.category) : 'Not selected'}
                       </p>
-                    </motion.div>
+                    </div>
                   )}
 
                   {/* Edit Profile Button */}
@@ -224,3 +224,4 @@ useEffect(() => {
 };
 
 export default Profile;
+

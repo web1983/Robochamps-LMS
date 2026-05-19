@@ -8,7 +8,8 @@
     "start": "node index.js",
     "test:db": "node test-db-connection.js",
     "seed:local": "node seed-local.js",
-    "seed:courses": "node seed-courses.js"
+    "seed:courses": "node seed-courses.js",
+    "remove:seed-courses": "node remove-seed-courses.js"
   },
   "keywords": [],
   "author": "",
