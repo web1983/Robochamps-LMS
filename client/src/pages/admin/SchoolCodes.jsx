@@ -368,7 +368,7 @@ const SchoolCodes = () => {
                     </TableRow>
                   ) : (
                     schoolCodes.map((code) => (
-                      <TableRow key={code._id} className="hover:bg-gray-50">
+                      <TableRow key={code._id} className="hover:bg-white/10">
                         <TableCell className="font-medium text-gray-900">
                           {code.schoolName}
                         </TableCell>

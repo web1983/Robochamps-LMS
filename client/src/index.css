@@ -119,6 +119,17 @@
     color: #ffffff !important;
   }
 
+  /* hover:bg-gray-50 is not overridden above — it becomes light gray with white text */
+  .admin-theme tbody tr:hover,
+  .admin-theme .hover\:bg-gray-50:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .admin-theme tbody tr:hover td,
+  .admin-theme tbody tr:hover th {
+    color: #ffffff !important;
+  }
+
   .admin-theme .bg-blue-50,
   .admin-theme .bg-green-50,
   .admin-theme .bg-yellow-50,

@@ -336,7 +336,7 @@ const UserManagement = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredStudents.map((student) => (
-                    <TableRow key={student._id} className="hover:bg-gray-50">
+                    <TableRow key={student._id} className="hover:bg-white/10">
                       <TableCell className="font-medium">{student.name}</TableCell>
                       <TableCell className="text-sm text-gray-600">{student.school || '-'}</TableCell>
                       <TableCell className="text-sm text-gray-600">{student.email}</TableCell>

@@ -326,7 +326,7 @@ const MarksManagement = () => {
               <TableBody>
                 {filteredStudents.length > 0 ? (
                   filteredStudents.map((student) => (
-                    <TableRow key={student._id} className="hover:bg-gray-50">
+                    <TableRow key={student._id} className="hover:bg-white/10">
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar className="h-10 w-10">
