@@ -48,7 +48,7 @@ const Navbar = () => {
   const botIconUrl = "https://res.cloudinary.com/dmlk8egiw/image/upload/v1762943081/Mask_group_umuqm2.png";
   
   // Logo image URL
-  const logoButtonUrl = "https://res.cloudinary.com/dmlk8egiw/image/upload/v1762944292/Group_3645_vhtdrw.png";
+  const logoButtonUrl = "https://res.cloudinary.com/dtj4pbuvg/image/upload/q_auto/f_auto/v1779183520/Group_1000002763_ssbduq.png";
 
   // Cache settings to localStorage when received
   useEffect(() => {
@@ -131,7 +131,7 @@ const Navbar = () => {
           >
             {/* Logo Image from Cloudinary - Desktop: original size */}
             <img 
-              src="https://res.cloudinary.com/dmlk8egiw/image/upload/v1762944292/Group_3645_vhtdrw.png"
+              src={logoButtonUrl}
               alt="Robochamps LMS Logo"
               className="h-12 md:h-14 w-auto object-contain lg:h-16 xl:h-14 max-w-[280px]"
             />
@@ -230,7 +230,7 @@ const Navbar = () => {
           >
             {/* Logo Image from Cloudinary */}
             <img 
-              src="https://res.cloudinary.com/dmlk8egiw/image/upload/v1762944292/Group_3645_vhtdrw.png"
+              src={logoButtonUrl}
               alt="Robochamps LMS Logo"
               className="h-10 sm:h-12 w-auto object-contain max-w-[160px] sm:max-w-[200px]"
             />
