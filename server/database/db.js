@@ -19,6 +19,14 @@ export function getDbConnectionHint(error) {
   const name = error?.name || "";
   const msg = (error?.message || "").toLowerCase();
 
+  if (
+    name === "MongoParseError" ||
+    msg.includes("unescaped") ||
+    msg.includes("password contains")
+  ) {
+    return "Your database password has special characters (@ # % / ? etc.). In Atlas reset the password to letters and numbers only, OR URL-encode the password in MONGO_URI (e.g. @ → %40). Update Vercel and redeploy.";
+  }
+
   if (name === "MongoAuthenticationError" || msg.includes("authentication failed")) {
     return "Wrong database username or password in MONGO_URI. In Atlas, reset the DB user password and update Vercel. If the password has @ # % etc., URL-encode it in the connection string.";
   }
