@@ -119,7 +119,24 @@ export const login = async (req, res) => {
       });
     }
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!user.password || typeof user.password !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect email or password",
+      });
+    }
+
+    let isPasswordMatch = false;
+    try {
+      isPasswordMatch = await bcrypt.compare(password, user.password);
+    } catch (compareError) {
+      console.error("Password compare failed for", email, compareError.message);
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect email or password",
+      });
+    }
+
     if (!isPasswordMatch) {
       return res.status(400).json({
         success: false,
@@ -127,19 +144,20 @@ export const login = async (req, res) => {
       });
     }
 
-    // Update last login and active status
-    user.lastLogin = new Date();
-    user.isActive = true;
-    await user.save();
+    // updateOne avoids full-document validation errors on legacy migrated users
+    await User.updateOne(
+      { _id: user._id },
+      { $set: { lastLogin: new Date(), isActive: true } }
+    );
 
-    // ✅ Generate token
     return generateToken(res, user, `Welcome back ${user.name}`);
   } 
   catch (error) {
-    console.error(error);
+    console.error("Login error:", error);
     return res.status(500).json({
       success: false,
       message: "Failed to login",
+      ...(process.env.NODE_ENV !== "production" && { error: error.message }),
     });
   }
 };

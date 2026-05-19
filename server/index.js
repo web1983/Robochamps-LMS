@@ -40,6 +40,8 @@ const allowedOrigins = [
     "http://localhost:5175",
     "https://lms.robowunder.in",
     "https://lms.robowunder.com",
+    "https://lms.robochamps.in",
+    "https://www.lms.robochamps.in",
     "https://lms-amber-nine.vercel.app",
     "https://robochamps-lms.vercel.app",
     "https://www.robochamps-lms.vercel.app",
