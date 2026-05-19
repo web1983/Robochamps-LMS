@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "test:db": "node test-db-connection.js"
+    "test:db": "node test-db-connection.js",
+    "seed:local": "node seed-local.js"
   },
   "keywords": [],
   "author": "",
