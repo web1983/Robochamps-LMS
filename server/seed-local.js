@@ -21,8 +21,8 @@ if (!buildMongoUri()) {
 await connectDB();
 
 const schoolCode = "DEMO2024";
-const instructorEmail = "admin@robochamps.local";
-const instructorPassword = "admin123";
+const adminEmail = "web@robowunder.com";
+const adminPassword = "Robochamps";
 
 let code = await SchoolCode.findOne({ code: schoolCode });
 if (!code) {
@@ -38,22 +38,27 @@ if (!code) {
   console.log("School code already exists:", schoolCode);
 }
 
-let instructor = await User.findOne({ email: instructorEmail });
-if (!instructor) {
-  const hashed = await bcrypt.hash(instructorPassword, 10);
-  instructor = await User.create({
-    name: "Admin Instructor",
-    email: instructorEmail,
+const hashed = await bcrypt.hash(adminPassword, 10);
+let admin = await User.findOne({ email: adminEmail });
+
+if (!admin) {
+  admin = await User.create({
+    name: "Robowunder Admin",
+    email: adminEmail,
     password: hashed,
     role: "instructor",
   });
-  console.log("Created instructor login:");
-  console.log("  Email:", instructorEmail);
-  console.log("  Password:", instructorPassword);
+  console.log("Created admin account:");
 } else {
-  console.log("Instructor already exists:", instructorEmail);
+  admin.password = hashed;
+  admin.role = "instructor";
+  admin.name = admin.name || "Robowunder Admin";
+  await admin.save();
+  console.log("Updated admin account:");
 }
 
+console.log("  Email:", adminEmail);
+console.log("  Password:", adminPassword);
 console.log("\nStudent signup: use school code", schoolCode, "on the Register tab.");
 console.log("Done.");
 process.exit(0);
