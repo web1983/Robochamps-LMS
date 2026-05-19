@@ -127,6 +127,10 @@ function EmptyCoursesMessage({ isAuthenticated, user, needsCategory, meta }) {
         <Link to="/select-category">Try another grade / level</Link>
       </Button>
     );
+  } else if (user?.category && meta?.publishedInCategory === 0) {
+    title = `No courses for ${getCategoryLabel(user.category)}`;
+    detail =
+      "This database has no courses yet. An instructor must add courses in Admin, or run npm run seed:courses on the server. If you had an old cluster, use migrate-from-old-db.js to copy data.";
   } else if (user?.category) {
     title = `No courses for ${getCategoryLabel(user.category)}`;
     detail =
