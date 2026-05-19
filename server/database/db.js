@@ -1,7 +1,24 @@
 import mongoose from "mongoose";
 
-const getMongoUri = () =>
-  (process.env.MONGO_URI || process.env.MONGODB_URI || "").trim();
+/** Build URI from MONGO_URI or from separate vars (password auto-encoded). */
+export function buildMongoUri() {
+  const full = (process.env.MONGO_URI || process.env.MONGODB_URI || "").trim();
+  if (full) return full;
+
+  const user = process.env.MONGODB_USER?.trim();
+  const password = process.env.MONGODB_PASSWORD?.trim();
+  const host =
+    process.env.MONGODB_CLUSTER?.trim() ||
+    process.env.MONGODB_HOST?.trim();
+  const db = process.env.MONGODB_DB?.trim() || "lms";
+
+  if (user && password && host) {
+    const hostname = host.replace(/^mongodb\+srv:\/\//, "").replace(/\/.*$/, "");
+    return `mongodb+srv://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${hostname}/${db}?retryWrites=true&w=majority&authSource=admin`;
+  }
+
+  return "";
+}
 
 /** @type {{ conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null }} */
 let cached = global.mongoose;
@@ -11,9 +28,9 @@ if (!cached) {
 }
 
 export function getDbConnectionHint(error) {
-  const uri = getMongoUri();
+  const uri = buildMongoUri();
   if (!uri) {
-    return "Add MONGO_URI in Vercel → Settings → Environment Variables (Production), then redeploy.";
+    return "Set MONGO_URI in Vercel, OR set MONGODB_USER + MONGODB_PASSWORD + MONGODB_CLUSTER (cluster host from Atlas). Then redeploy.";
   }
 
   const name = error?.name || "";
@@ -24,11 +41,11 @@ export function getDbConnectionHint(error) {
     msg.includes("unescaped") ||
     msg.includes("password contains")
   ) {
-    return "Your database password has special characters (@ # % / ? etc.). In Atlas reset the password to letters and numbers only, OR URL-encode the password in MONGO_URI (e.g. @ → %40). Update Vercel and redeploy.";
+    return "Use separate Vercel vars MONGODB_USER, MONGODB_PASSWORD, MONGODB_CLUSTER instead of one MONGO_URI string.";
   }
 
   if (name === "MongoAuthenticationError" || msg.includes("authentication failed")) {
-    return "Wrong database username or password in MONGO_URI. In Atlas, reset the DB user password and update Vercel. If the password has @ # % etc., URL-encode it in the connection string.";
+    return "Atlas password does not match. Create a NEW database user in Atlas (Database Access), copy the Drivers connection string, update .env / Vercel, run: npm run test:db";
   }
 
   if (
@@ -37,18 +54,18 @@ export function getDbConnectionHint(error) {
     msg.includes("connect econnrefused") ||
     msg.includes("getaddrinfo")
   ) {
-    return "MongoDB Atlas → Network Access → add 0.0.0.0/0 (allow from anywhere). Ensure the cluster is not paused and the connection string uses the correct cluster hostname.";
+    return "MongoDB Atlas → Network Access → add 0.0.0.0/0. Ensure cluster is running.";
   }
 
-  return "Check MongoDB Atlas Network Access (0.0.0.0/0), database user credentials, and that MONGO_URI in Vercel matches server/.env exactly.";
+  return "Run npm run test:db in the server folder locally until it says SUCCESS, then copy the same values to Vercel.";
 }
 
 const connectDB = async () => {
-  const MONGODB_URI = getMongoUri();
+  const MONGODB_URI = buildMongoUri();
 
   if (!MONGODB_URI) {
     throw new Error(
-      "MONGO_URI is not set. Add it in Vercel → Project Settings → Environment Variables."
+      "MongoDB not configured. Set MONGO_URI or MONGODB_USER + MONGODB_PASSWORD + MONGODB_CLUSTER."
     );
   }
 
@@ -67,6 +84,7 @@ const connectDB = async () => {
         socketTimeoutMS: 45000,
         family: 4,
         connectTimeoutMS: 10000,
+        authSource: "admin",
       })
       .then((mongooseInstance) => {
         console.log("MongoDB Connected");

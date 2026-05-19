@@ -94,7 +94,8 @@ app.get("/home", (req, res) => {
 // Diagnostic — no DB required (use after deploy to verify env vars)
 app.get("/api/health", (req, res) => {
     const mongoUriConfigured = Boolean(
-        (process.env.MONGO_URI || process.env.MONGODB_URI || "").trim()
+        (process.env.MONGO_URI || process.env.MONGODB_URI || "").trim() ||
+        (process.env.MONGODB_USER && process.env.MONGODB_PASSWORD && (process.env.MONGODB_CLUSTER || process.env.MONGODB_HOST))
     );
     const jwtConfigured = Boolean(process.env.JWT_SECRET);
     res.status(200).json({
