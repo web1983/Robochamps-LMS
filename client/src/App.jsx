@@ -12,12 +12,16 @@ import Profile from './pages/student/Profile'
 import UploadVideo from './pages/student/UploadVideo'
 import CourseDetail from './pages/student/CourseDetail'
 import VideoPlayer from './pages/student/VideoPlayer'
+import MCQTest from './pages/student/MCQTest'
 import SelectCategory from './pages/student/SelectCategory'
 import Slidebar from './pages/admin/Slidebar'
 import Dashboard from './pages/admin/Dashboard'
 import CourseTable from './pages/admin/course/CourseTable'
 import AddCourse from './pages/admin/course/AddCourse'
 import EditCourse from './pages/admin/course/EditCourse'
+import CourseTest from './pages/admin/test/CourseTest'
+import MarksManagement from './pages/admin/marks/MarksManagement'
+import GenerateCertificate from './pages/admin/certificate/GenerateCertificate'
 import CreateUser from './pages/admin/user/CreateUser'
 import UserManagement from './pages/admin/user/UserManagement'
 import InstructorTab from './pages/admin/InstructorTab'
@@ -84,6 +88,10 @@ const appRouter = createBrowserRouter([
         path:"select-category",
         element:<SelectCategory/>
       },
+      {
+        path:"course/:courseId/test",
+        element:<MCQTest/>
+      },
 
       // admin routes start from here
       {
@@ -115,6 +123,14 @@ const appRouter = createBrowserRouter([
             element:<EditCourse/>
           },
           {
+            path:"test",
+            element:<CourseTest/>
+          },
+          {
+            path:"marks",
+            element:<MarksManagement/>
+          },
+          {
             path:"users",
             element:<CreateUser/>
           },
@@ -129,6 +145,10 @@ const appRouter = createBrowserRouter([
           {
             path:"school-codes",
             element:<SchoolCodes/>
+          },
+          {
+            path:"generate-certificate",
+            element:<GenerateCertificate/>
           },
           {
             path:"settings",

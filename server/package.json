@@ -9,7 +9,9 @@
     "test:db": "node test-db-connection.js",
     "seed:local": "node seed-local.js",
     "seed:courses": "node seed-courses.js",
-    "remove:seed-courses": "node remove-seed-courses.js"
+    "remove:seed-courses": "node remove-seed-courses.js",
+    "sync:test-questions": "node sync-test-questions-from-db.js",
+    "copy:test-basic-advance": "node copy-test-questions-basic-to-advance.js"
   },
   "keywords": [],
   "author": "",

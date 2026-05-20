@@ -11,10 +11,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import { useLoginUserMutation, useRegisterUserMutation } from "@/features/api/authApi";
 import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
+import { buildCategory, STUDENT_GRADE_BAND_LABELS } from "@/lib/categoryUtils";
 
 const getPostLoginPath = (user) => {
   if (user?.role === "instructor") return "/admin/dashboard";
@@ -28,6 +36,8 @@ const Login = () => {
     email: "",
     password: "",
     schoolCode: "",
+    studentClass: "",
+    level: "Basic",
   });
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
 
@@ -48,15 +58,27 @@ const Login = () => {
 
   const handleRegistration = async (type) => {
     if (type === "signup") {
+      if (!signupInput.studentClass || !signupInput.level) {
+        toast.error("Please select your grade and level");
+        return;
+      }
       if (!signupInput.schoolCode?.trim()) {
         toast.error("Please enter your school code");
         return;
       }
+
+      const category = buildCategory(signupInput.studentClass, signupInput.level);
+      if (!category) {
+        toast.error("Invalid grade or level selection");
+        return;
+      }
+
       await registerUser({
         name: signupInput.name,
         email: signupInput.email,
         password: signupInput.password,
         schoolCode: signupInput.schoolCode.trim().toUpperCase(),
+        category,
       });
       return;
     }
@@ -81,7 +103,18 @@ const Login = () => {
       const hint = loginError?.data?.hint;
       toast.error(hint ? `${msg}. ${hint}` : msg);
     }
-  }, [registerIsSuccess, registerError, registerData, loginIsSuccess, loginError, loginData, navigate, loginUser, signupInput.email, signupInput.password]);
+  }, [
+    registerIsSuccess,
+    registerError,
+    registerData,
+    loginIsSuccess,
+    loginError,
+    loginData,
+    navigate,
+    loginUser,
+    signupInput.email,
+    signupInput.password,
+  ]);
 
   return (
     <div className="relative flex items-start justify-center min-h-screen bg-black bg-[url('https://res.cloudinary.com/dmlk8egiw/image/upload/v1762946281/Group_3646_ptqpn7.png')] bg-cover bg-center md:bg-top bg-no-repeat px-4 pt-24 pb-12">
@@ -107,7 +140,7 @@ const Login = () => {
               <CardHeader className="mb-4 text-center">
                 <CardTitle className="text-2xl font-semibold text-white">Signup</CardTitle>
                 <CardDescription className="text-white/70">
-                  Create an account with your school code. You will choose your grade after login.
+                  Create a new account with your school code, grade, and level.
                 </CardDescription>
               </CardHeader>
 
@@ -119,7 +152,20 @@ const Login = () => {
                     value={signupInput.name}
                     name="name"
                     type="text"
-                    placeholder="Your name"
+                    placeholder="eg. Akshay"
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="signup-email" className="text-white font-semibold">Email</Label>
+                  <Input
+                    onChange={(e) => changeInputHandler(e, "signup")}
+                    value={signupInput.email}
+                    name="email"
+                    type="email"
+                    placeholder="eg. akshay@lms.com"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />
@@ -140,16 +186,43 @@ const Login = () => {
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="signup-email" className="text-white font-semibold">Email</Label>
-                  <Input
-                    onChange={(e) => changeInputHandler(e, "signup")}
-                    value={signupInput.email}
-                    name="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
-                  />
+                  <Label htmlFor="signup-class" className="text-white font-semibold">Student Class</Label>
+                  <Select
+                    value={signupInput.studentClass}
+                    onValueChange={(value) => setSignupInput({ ...signupInput, studentClass: value })}
+                  >
+                    <SelectTrigger className="!bg-white/10 !border-white/20 !text-white focus:!border-[#F58120] focus:!ring-[#F58120] data-[placeholder]:!text-white/50 [&>span]:!text-white [&>svg]:!text-white">
+                      <SelectValue placeholder="Select your grade" />
+                    </SelectTrigger>
+                    <SelectContent className="!bg-gray-800 !border-white/20 !text-white">
+                      <SelectItem value="3-5" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">
+                        {STUDENT_GRADE_BAND_LABELS["3-5"]}
+                      </SelectItem>
+                      <SelectItem value="6-8" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">
+                        {STUDENT_GRADE_BAND_LABELS["6-8"]}
+                      </SelectItem>
+                      <SelectItem value="9-12" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">
+                        {STUDENT_GRADE_BAND_LABELS["9-12"]}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="signup-level" className="text-white font-semibold">Level</Label>
+                  <Select
+                    value={signupInput.level}
+                    onValueChange={(value) => setSignupInput({ ...signupInput, level: value })}
+                  >
+                    <SelectTrigger className="!bg-white/10 !border-white/20 !text-white focus:!border-[#F58120] focus:!ring-[#F58120] data-[placeholder]:!text-white/50 [&>span]:!text-white [&>svg]:!text-white">
+                      <SelectValue placeholder="Select level" />
+                    </SelectTrigger>
+                    <SelectContent className="!bg-gray-800 !border-white/20 !text-white">
+                      <SelectItem value="Basic" className="!text-white hover:!bg-gray-700 focus:!bg-gray-700 focus:!text-white [&>span]:!text-white">
+                        Basic
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="grid gap-2">
@@ -159,7 +232,7 @@ const Login = () => {
                     value={signupInput.password}
                     name="password"
                     type="password"
-                    placeholder="Password"
+                    placeholder="eg. xyz"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />
@@ -199,7 +272,7 @@ const Login = () => {
                     value={loginInput.email}
                     name="email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="eg. akshay@lms.com"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />
@@ -220,7 +293,7 @@ const Login = () => {
                     value={loginInput.password}
                     name="password"
                     type="password"
-                    placeholder="Password"
+                    placeholder="eg. xyz"
                     required
                     className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#F58120] focus:ring-[#F58120]"
                   />

@@ -1,10 +1,9 @@
 import { Button } from '@/components/ui/button'
-
 import React from 'react'
-
+import { Award, ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-
 import { useSelector } from 'react-redux'
+import { useGetCertificateStatusQuery } from '@/features/api/enrollmentApi'
 
 
 
@@ -13,8 +12,9 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector(store => store.auth);
-
-
+  const { data: certificateData } = useGetCertificateStatusQuery(undefined, {
+    skip: !user || user?.role !== 'student'
+  });
 
   const scrollToCourses = () => {
 
@@ -47,6 +47,27 @@ const HeroSection = () => {
 
 
   return (
+    <>
+      {certificateData?.eligible && certificateData?.certificateData && (
+        <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 py-4">
+          <div className="max-w-7xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <Award className="h-8 w-8 text-white animate-pulse" />
+              <div>
+                <h3 className="text-white font-bold text-lg">🎉 Congratulations!</h3>
+                <p className="text-amber-100 text-sm">You&apos;ve earned your Robochamps Championship Certificate!</p>
+              </div>
+            </div>
+            <Button
+              onClick={() => navigate('/my-learning')}
+              className="bg-white text-amber-700 hover:bg-amber-50 font-semibold shadow-lg"
+            >
+              View Certificate
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="relative overflow-hidden w-full h-auto bg-black bg-[url('https://res.cloudinary.com/dmlk8egiw/image/upload/v1763026348/Robowunder_Banner_1_qxdhb7.jpg')] bg-cover bg-center md:bg-top bg-no-repeat min-h-[600px] md:h-auto">
 
@@ -317,7 +338,7 @@ const HeroSection = () => {
         </div>
 
       </div>
-
+    </>
   )
 
 }

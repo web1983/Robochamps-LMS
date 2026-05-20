@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Award, Search, Filter, Download, UserCheck, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
 import { useGetAllStudentsQuery } from '@/features/api/authApi';
-import RobowunderCertificate from '@/components/RobowunderCertificate';
+import RobochampsCertificate from '@/components/RobochampsCertificate';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import JSZip from 'jszip';
 import html2canvas from 'html2canvas';
@@ -642,7 +642,7 @@ const GenerateCertificate = () => {
           </CardHeader>
           <CardContent>
             <div className="flex justify-center">
-              <RobowunderCertificate
+              <RobochampsCertificate
                 key={`${certificateData.userName}-${certificateData.completionDate}`}
                 userName={certificateData.userName}
                 completionDate={new Date(certificateData.completionDate + 'T00:00:00').toISOString()}
@@ -667,7 +667,7 @@ const GenerateCertificate = () => {
           opacity: 0,
         }}
       >
-        <RobowunderCertificate
+        <RobochampsCertificate
           ref={bulkCertificateElementRef}
           key={`${bulkCurrentName}-${bulkCompletionDate}-${bulkMode}`}
           userName={bulkCurrentName || ' '}

@@ -1,12 +1,15 @@
 import {
   ChartNoAxesColumn,
   SquareLibrary,
+  ClipboardList,
   UserPlus,
   UserCog,
   Settings,
+  Trophy,
   Users,
   Radio,
   KeyRound,
+  Award,
   Video,
 } from 'lucide-react'
 import React from 'react'
@@ -16,11 +19,14 @@ const navLinks = [
   { to: 'dashboard', label: 'Dashboard', icon: ChartNoAxesColumn },
   { to: 'course', label: 'Courses', icon: SquareLibrary },
   { to: 'live-courses', label: 'Live Courses', icon: Radio },
+  { to: 'test', label: 'Course Test', icon: ClipboardList },
+  { to: 'marks', label: 'Marks', icon: Trophy },
   { to: 'users', label: 'Create User', icon: UserPlus },
   { to: 'manage-users', label: 'Manage Users', icon: UserCog },
   { to: 'student-videos', label: 'Student Videos', icon: Video },
   { to: 'instructors', label: 'Instructors', icon: Users },
   { to: 'school-codes', label: 'School Codes', icon: KeyRound },
+  { to: 'generate-certificate', label: 'Certificates', icon: Award },
   { to: 'settings', label: 'Settings', icon: Settings },
 ]
 

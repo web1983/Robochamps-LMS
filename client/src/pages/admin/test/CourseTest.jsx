@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Loader2, Plus, Trash2, Video, HelpCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import { getCategoryLabel } from '@/lib/categoryUtils';
 
 const CourseTest = () => {
   const [selectedCourseId, setSelectedCourseId] = useState("");
@@ -26,19 +27,6 @@ const CourseTest = () => {
   const [editCourse, { isLoading: updating, isSuccess, error }] = useEditCourseMutation();
 
   const publishedCourses = coursesData?.courses?.filter(course => course.isPublished) || [];
-  
-  // Helper function to format category label
-  const getCategoryLabel = (category) => {
-    const categoryMap = {
-      'grade_3_5_basic': 'Grade 3-5 (Basic)',
-      'grade_6_8_basic': 'Grade 6-8 (Basic)',
-      'grade_9_12_basic': 'Grade 9-12 (Basic)',
-      'grade_3_5_advance': 'Grade 3-5 (Advance)',
-      'grade_6_8_advance': 'Grade 6-8 (Advance)',
-      'grade_9_12_advance': 'Grade 9-12 (Advance)'
-    };
-    return categoryMap[category] || category;
-  };
   
   // Filter courses based on search query (search in both title and category)
   const filteredCourses = publishedCourses.filter(course => {

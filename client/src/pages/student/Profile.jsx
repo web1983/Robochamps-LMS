@@ -13,9 +13,11 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, User, Mail, Shield, GraduationCap, Edit2, Camera } from 'lucide-react';
+import { Loader2, Award, User, Mail, Shield, GraduationCap, Edit2, Camera } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLoadUserQuery, useUpdateUserMutation } from '@/features/api/authApi.js';
+import { useGetCertificateStatusQuery } from '@/features/api/enrollmentApi';
+import RobochampsCertificate from '@/components/RobochampsCertificate';
 import { getCategoryLabel } from '@/lib/categoryUtils';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
@@ -28,6 +30,9 @@ const Profile = () => {
   const [updateUser, { data: updateUserData, isLoading: updateUserIsLoading, isError, error, isSuccess }] = useUpdateUserMutation();
   
   const user = data?.user;
+  const { data: certificateData } = useGetCertificateStatusQuery(undefined, {
+    skip: !user || user?.role !== 'student'
+  });
   // Set initial name
   useEffect(() => {
     if (data?.user?.name) setName(data.user.name);
@@ -217,6 +222,30 @@ useEffect(() => {
             </div>
           </CardContent>
         </Card>
+
+        {certificateData?.eligible && certificateData?.certificateData && (
+          <Card className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border-2 border-yellow-500/50 shadow-2xl overflow-hidden mt-8">
+            <CardHeader className="bg-yellow-500/20 backdrop-blur-sm border-b border-yellow-500/50">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-[#F58120] rounded-xl shadow-lg">
+                  <Award className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold text-white">🎉 Your Certificate</h2>
+                  <p className="text-white/80 mt-1">You&apos;ve earned your Robochamps championship certificate!</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6 bg-white/5 backdrop-blur-sm">
+              <div className="max-w-3xl mx-auto">
+                <RobochampsCertificate
+                  userName={certificateData.certificateData.userName}
+                  completionDate={certificateData.certificateData.completionDate}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
       </div>
     </div>
